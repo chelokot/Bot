@@ -1,10 +1,3 @@
-import logging
-logging.basicConfig(filename='log.txt', level=logging.INFO, format='%(asctime)s %(message)s')
-def print(*args, **kwargs):
-    print(*args, **kwargs)
-    print(*args, **kwargs, file=open("log.txt", "a"))
-    logging.info(*args, **kwargs)
-
 from telebot import types
 import telebot
 

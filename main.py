@@ -1,3 +1,7 @@
+def print(*args, **kwargs):
+    print(*args, **kwargs)
+    print(*args, **kwargs, file=open("log.txt", "a"))
+
 from typing import List
 
 import math

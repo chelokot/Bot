@@ -173,11 +173,13 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
             execute_program(first_subprogram, variables, message, functions, functions_lambdas)
         else:
             execute_second = True
-            
+        
+        print('amogus', program_code[first_subprogram_end + 1:])
         if program_code[first_subprogram_end + 1:].startswith("else"):
             second_subprogram_start = first_subprogram_end + 5
             second_subprogram_end = -1
             parenthesis_count = 1
+            print('amogus2', program_code[second_subprogram_start + 1:])
             for i in range(second_subprogram_start + 1, len(program_code)):
                 if program_code[i] == "{":
                     parenthesis_count += 1
@@ -187,6 +189,7 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
                     second_subprogram_end = i
                     break
             second_subprogram = program_code[second_subprogram_start + 1:second_subprogram_end]
+            print('amogus3', second_subprogram)
             if execute_second:
                 execute_program(second_subprogram, variables, message, functions, functions_lambdas)
             return execute_program(program_code[second_subprogram_end + 1:], variables, message, functions, functions_lambdas)

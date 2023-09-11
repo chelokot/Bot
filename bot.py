@@ -81,9 +81,10 @@ def help(message):
     - Кожна команда закінчується символом ";"
     - Доступні математичні операції: +, -, *, /, ^, |(цілочисельне ділення), %, sin, cos, tan, exp, log, sqrt, abs, ln
     - Доступні логічні операції: &lt;, &gt;, &lt;=, &gt;=, ==, !=, and, or
-    - Можна створювати змінні: a = 1;
+    - Можна створювати змінні: 
+<code>a = 1;</code>
     - Можна використовувати змінні: 
-<code>b = $a$ + 1</code>;
+<code>b = $a$ + 1;</code>
     - Можна використовувати значення з об'єкту message: 
 <code>text = "$message.text$";</code>, <code>id = $message.from_user.id$;</code>, <code>name = "$message.from_user.first_name$";</code>, і т.д.
     - Можна використовувати if-else: 
@@ -108,8 +109,10 @@ def help(message):
     - Каждая команда заканчивается символом ";"
     - Доступны математические операции: +, -, *, /, ^, |(целочисленное деление), %, sin, cos, tan, exp, log, sqrt, abs, ln
     - Доступны логические операции: &lt;, &gt;, &lt;=, &gt;=, ==, !=, and, or
-    - Можно создавать переменные: a = 1;
-    - Можно использовать переменные: b = $a$ + 1;
+    - Можно создавать переменные: 
+<code>a = 1;</code>
+    - Можно использовать переменные: 
+<code>b = $a$ + 1;</code>
     - Можно использовать значения из объекта message: 
 <code>text = "$message.text$";</code>, <code>id = $message.from_user.id$;</code>, <code>name = "$message.from_user.first_name$";</code>, и т.д.
     - Можно использовать if-else: 
@@ -134,8 +137,10 @@ A simple programming language is used to create macros:
     - Each command ends with the symbol ";"
     - Mathematical operations are available: +, -, *, /, ^, |(integer division), %, sin, cos, tan, exp, log, sqrt, abs, ln
     - Logical operations are available: &lt;, &gt;, &lt;=, &gt;=, ==, !=, and, or
-    - You can create variables: a = 1;
-    - You can use variables: b = $a$ + 1;
+    - You can create variables: 
+<code>a = 1;</code>
+    - You can use variables: 
+<code>b = $a$ + 1;</code>
     - You can use values from the message object: 
 <code>text = "$message.text$";</code>, <code>id = $message.from_user.id$;</code>, <code>name = "$message.from_user.first_name$";</code>, etc.
     - You can use if-else: 
@@ -160,8 +165,10 @@ Es wird eine einfache Programmiersprache verwendet, um Makros zu erstellen:
     - Jeder Befehl endet mit dem Symbol ";"
     - Mathematische Operationen sind verfügbar: +, -, *, /, ^, |(ganzzahlige Division), %, sin, cos, tan, exp, log, sqrt, abs, ln
     - Logische Operationen sind verfügbar: &lt;, &gt;, &lt;=, &gt;=, ==, !=, and, or
-    - Sie können Variablen erstellen: a = 1;
-    - Sie können Variablen verwenden: b = $a$ + 1;
+    - Sie können Variablen erstellen: 
+<code>a = 1;</code>
+    - Sie können Variablen verwenden: 
+<code>b = $a$ + 1;</code>
     - Sie können Werte aus dem Nachrichtenobjekt verwenden: 
 <code>text = "$message.text$";</code>, <code>id = $message.from_user.id$;</code>, <code>name = "$message.from_user.first_name$";</code>, usw.
     - Sie können if-else verwenden: 
@@ -186,8 +193,10 @@ Verwenden Sie /superbindings, um alle Makros im Chat anzuzeigen
     - Кожная каманда заканчваецца сімвалам ";"
     - Даступны матэматычныя аперацыі: +, -, *, /, ^, |(цэлыя дзяленне), %, sin, cos, tan, exp, log, sqrt, abs, ln
     - Даступны лагічныя аперацыі: &lt;, &gt;, &lt;=, &gt;=, ==, !=, and, or
-    - Можна ствараць зменныя: a = 1;
-    - Можна выкарыстоўваць зменныя: b = $a$ + 1;
+    - Можна ствараць зменныя: 
+<code>a = 1;</code>
+    - Можна выкарыстоўваць зменныя: 
+<code>b = $a$ + 1;</code>
     - Можна выкарыстоўваць значэнні з аб'екта message: 
 <code>text = "$message.text$";</code>, <code>id = $message.from_user.id$;</code>, <code>name = "$message.from_user.first_name$";</code>, і г.д.
     - Можна выкарыстоўваць if-else: 
@@ -212,8 +221,10 @@ Do tworzenia makr używany jest prosty język programowania:
     - Każda komenda kończy się symbolem ";"
     - Dostępne są operacje matematyczne: +, -, *, /, ^, |(dzielenie całkowitoliczbowe), %, sin, cos, tan, exp, log, sqrt, abs, ln
     - Dostępne są operacje logiczne: &lt;, &gt;, &lt;=, &gt;=, ==, !=, and, or
-    - Możesz tworzyć zmienne: a = 1;
-    - Możesz używać zmiennych: b = $a$ + 1;
+    - Możesz tworzyć zmienne: 
+<code>a = 1;</code>
+    - Możesz używać zmiennych: 
+<code>b = $a$ + 1;</code>
     - Możesz używać wartości z obiektu message: 
 <code>text = "$message.text$";</code>, <code>id = $message.from_user.id$;</code>, <code>name = "$message.from_user.first_name$";</code>, itd.
     - Możesz używać if-else: 
@@ -238,8 +249,10 @@ K vytváření maker se používá jednoduchý programovací jazyk:
     - Každý příkaz končí symbolem ";"
     - Jsou k dispozici matematické operace: +, -, *, /, ^, |(celočíselné dělení), %, sin, cos, tan, exp, log, sqrt, abs, ln
     - Jsou k dispozici logické operace: &lt;, &gt;, &lt;=, &gt;=, ==, !=, and, or
-    - Můžete vytvářet proměnné: a = 1;
-    - Můžete používat proměnné: b = $a$ + 1;
+    - Můžete vytvářet proměnné: 
+<code>a = 1;</code>
+    - Můžete používat proměnné: 
+<code>b = $a$ + 1;</code>
     - Můžete používat hodnoty z objektu message: 
 <code>text = "$message.text$";</code>, <code>id = $message.from_user.id$;</code>, <code>name = "$message.from_user.first_name$";</code>, atd.
     - Můžete používat if-else: 

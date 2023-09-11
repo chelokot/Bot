@@ -1,7 +1,3 @@
-def print(*args, **kwargs):
-    print(*args, **kwargs)
-    print(*args, **kwargs, file=open("/home/andrew/projects/telegram/Bot-Deployer/repo/log.txt", "a"))
-
 from telebot import types
 import telebot
 

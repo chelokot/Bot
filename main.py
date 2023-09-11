@@ -1,7 +1,3 @@
-def print(*args, **kwargs):
-    print(*args, **kwargs)
-    print(*args, **kwargs, file=open("/home/andrew/projects/telegram/Bot-Deployer/repo/log.txt", "a"))
-    
 from typing import List
 
 import math

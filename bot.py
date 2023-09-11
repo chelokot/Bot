@@ -580,8 +580,8 @@ def echo_message(message):
             def action():
                 user_id = message.from_user.id
                 try:
-                    result = execute_program(programs[(program, chat_id)], {'id': user_id}, message = message) 
-                    bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True) 
+                    result = execute_program(programs[(program, chat_id)], {'id': user_id}, message = message)
+                    bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
                     bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
                 except Exception as e:
                     bot.reply_to(message, e)       

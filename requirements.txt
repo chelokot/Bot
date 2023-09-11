@@ -1,4 +1,3 @@
 pytelegrambotapi
-telegram-bot-deploy
 regex
 sqlite3

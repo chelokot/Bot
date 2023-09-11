@@ -168,28 +168,30 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
                 break
         first_subprogram = program_code[first_subprogram_start + 1:first_subprogram_end]
 
+        execute_second = False
         if expression_eval(parse(substitute_variables(condition, variables, message)), functions, functions_lambdas):
             execute_program(first_subprogram, variables, message, functions, functions_lambdas)
+        else:
+            execute_second = True
+            
+        if program_code[first_subprogram_end + 1:].startswith("else"):
+            second_subprogram_start = first_subprogram_end + 5
+            second_subprogram_end = -1
+            parenthesis_count = 1
+            for i in range(second_subprogram_start + 1, len(program_code)):
+                if program_code[i] == "{":
+                    parenthesis_count += 1
+                elif program_code[i] == "}":
+                    parenthesis_count -= 1
+                if parenthesis_count == 0:
+                    second_subprogram_end = i
+                    break
+            second_subprogram = program_code[second_subprogram_start + 1:second_subprogram_end]
+            if execute_second:
+                execute_program(second_subprogram, variables, message, functions, functions_lambdas)
             return execute_program(program_code[second_subprogram_end + 1:], variables, message, functions, functions_lambdas)
         else:
-            if program_code[first_subprogram_end + 1:].startswith("else"):
-                second_subprogram_start = first_subprogram_end + 5
-                second_subprogram_end = -1
-                parenthesis_count = 1
-                for i in range(second_subprogram_start + 1, len(program_code)):
-                    if program_code[i] == "{":
-                        parenthesis_count += 1
-                    elif program_code[i] == "}":
-                        parenthesis_count -= 1
-                    if parenthesis_count == 0:
-                        second_subprogram_end = i
-                        break
-                second_subprogram = program_code[second_subprogram_start + 1:second_subprogram_end]
-
-                execute_program(second_subprogram, variables, message, functions, functions_lambdas)
-                return execute_program(program_code[second_subprogram_end + 1:], variables, message, functions, functions_lambdas)
-            else:
-                return execute_program(program_code[ first_subprogram_end + 1:], variables, message, functions, functions_lambdas)
+            return execute_program(program_code[ first_subprogram_end + 1:], variables, message, functions, functions_lambdas)
             
     # starts with command
     command = program_code[:program_code.index(";")]

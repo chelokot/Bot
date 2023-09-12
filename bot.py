@@ -53,6 +53,7 @@ programs = {}
 #     programs[(row[0], row[2])] = row[1]
 c = db["macros"]
 for macro in c.find():
+    print(f"macro: {macro}")
     programs[(macro['trigger'], macro['chat_id'])] = macro['program']
 print(programs)
 
@@ -63,6 +64,7 @@ languages = {}
 #     languages[int(row[0])] = row[1]
 c = db["languages"]
 for user in c.find():
+    print(f"user: {user}")
     languages[user['user_id']] = user['language']
 print(languages)
 
@@ -612,7 +614,7 @@ def superbindings(message):
         # conn.commit()
         с = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
-        
+
     macros_title = {
         'uk': "Макроси",
         'ru': "Макросы",

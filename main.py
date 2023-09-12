@@ -71,7 +71,16 @@ def expression_eval(tokens: List[str], functions, functions_lambdas) -> float:
     for function in functions:
         for i in range(len(tokens)):
             if tokens[i] == function:
-                return expression_eval(tokens[:i] + [str(functions_lambdas[function](expression_eval([tokens[i+1]], functions, functions_lambdas)))] + tokens[i+2:], functions, functions_lambdas)
+                result = functions_lambdas[function](expression_eval([tokens[i+1]], functions, functions_lambdas))
+                if type(result) == list or type(result) == dict:
+                    new_variable_name = f"__{function}_{random.randint(0, 1000000)}__"
+                    while new_variable_name in functions:
+                        new_variable_name = f"__{function}_{random.randint(0, 1000000)}__"
+                    functions.append(new_variable_name)
+                    functions_lambdas[new_variable_name] = lambda a: result[int(a)]
+                    return expression_eval(tokens[:i] + [new_variable_name] + tokens[i+2:], functions, functions_lambdas)
+                else:
+                    return expression_eval(tokens[:i] + [str(result)] + tokens[i+2:], functions, functions_lambdas)
     # No functions
     for op_priority in ops:
         for i in range(len(tokens)):
@@ -187,12 +196,10 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
         else:
             execute_second = True
         
-        print('amogus', program_code[first_subprogram_end + 1:])
         if program_code[first_subprogram_end + 1:].startswith("else"):
             second_subprogram_start = first_subprogram_end + 5
             second_subprogram_end = -1
             parenthesis_count = 1
-            print('amogus2', program_code[second_subprogram_start + 1:])
             for i in range(second_subprogram_start + 1, len(program_code)):
                 if program_code[i] == "{":
                     parenthesis_count += 1

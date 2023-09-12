@@ -165,6 +165,7 @@ def parse(expression: str) -> List[str]:
 from typing import Dict
 from copy import deepcopy
 def execute_program(program_code: str, variables: Dict[str, str], message, functions = None, functions_lambdas = None) -> str:
+    print(f"Execute input: {program_code}, {variables}")
     if 'return' in variables.keys():
         if type(variables['return']) != str:
             return str(variables['return'])
@@ -176,8 +177,6 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
         functions = deepcopy(default_functions)
     if functions_lambdas == None:
         functions_lambdas = deepcopy(default_functions_lambdas)
-
-    print(f"Execute input: {program_code}, {variables}")
 
     clear = lambda s: s.replace("\n", ";").replace("\t", "").replace(" ", "").replace("'", '"')
     program_code = '"'.join([clear(line) if i % 2 == 0 else line for i, line in enumerate(program_code.split('"'))])

@@ -61,6 +61,8 @@ for macro in c.find():
         pass
 print(programs)
 
+с = 1
+c = 1
 
 languages = {}
 # # Get all languages from the database

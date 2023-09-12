@@ -255,6 +255,11 @@ def process_assignment_expression(expression: str, functions, functions_lambdas)
         elems = []
         elem = ''
         in_str = False
+
+        square_brackets_count = 0
+        curly_brackets_count = 0
+        
+
         for char in elems_string:
             if char == '"':
                 in_str = not in_str

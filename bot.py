@@ -597,6 +597,15 @@ def superbindings(message):
     bot.reply_to(message, bindings, parse_mode='HTML')
 
 
+@bot.message_handler(commands=['execute'])
+def one_time_execute(message):
+    try:
+        result = execute_program(message.reply_to_message.text, {}, message = message)
+        bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
+    except Exception as e:
+        bot.reply_to(message, e)
+
+
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
     #bot.leave_chat(-1001756869879)
@@ -607,7 +616,7 @@ def echo_message(message):
             def action():
                 user_id = message.from_user.id
                 try:
-                    result = execute_program(programs[(program, chat_id)], {'id': user_id}, message = message)
+                    result = execute_program(programs[(program, chat_id)], {}, message = message)
                     bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
                 except Exception as e:
                     bot.reply_to(message, e)       

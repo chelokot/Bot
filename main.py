@@ -35,6 +35,7 @@ ops_lambdas = {
 
 import requests, json
 def get(url: str, params: dict) -> dict:
+    print(f"Get input: {url}, {params}")
     return json.loads(requests.get(url, params).text)
 
 default_functions = ['sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'ln', 'get']

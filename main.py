@@ -1,3 +1,15 @@
+import time, random
+def print(*args, **kwargs):
+    print(*args, **kwargs)
+    while True:
+        try:
+            f = open('/home/andrew/var/log/main_log.txt', 'a+')
+            f.write(str(args) + '\n')
+            f.close()
+            break
+        except:
+            time.sleep(random.random())
+
 from typing import List
 
 import math

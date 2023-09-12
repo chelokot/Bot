@@ -1,3 +1,4 @@
 pytelegrambotapi
 regex
 python-dotenv
+requests

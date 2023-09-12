@@ -32,7 +32,12 @@ ops_lambdas = {
     "and": lambda a, b: a and b,
     "or": lambda a, b: a or b,
 }
-default_functions = ['sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'ln']
+
+import requests, json
+def get(url: str, params: dict) -> dict:
+    return json.loads(requests.get(url, params).text)
+
+default_functions = ['sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'ln', 'get']
 default_functions_lambdas = {
     'sin': lambda a: math.sin(a),
     'cos': lambda a: math.cos(a),
@@ -42,6 +47,7 @@ default_functions_lambdas = {
     'sqrt': lambda a: math.sqrt(a),
     'abs': lambda a: abs(a),
     'ln': lambda a: math.log(a),
+    'get': lambda a: get(a, {}),
 }
 
 def expression_eval(tokens: List[str], functions, functions_lambdas) -> float:

@@ -231,7 +231,7 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
 def substitute_variables(expression: str, variables: Dict[str, str], message) -> str:
     print(f"Substitute input: {expression}, {variables}")
     for variable in variables.keys():
-        if(type(variables[variable]) != list):
+        if(type(variables[variable]) != list and type(variables[variable]) != dict):
             if(type(variables[variable]) == str):
                 expression = expression.replace(f"${variable}$", f'{variables[variable]}')
             else:
@@ -347,11 +347,14 @@ def execute_command(command: str, variables: Dict[str, str], message, functions,
         if assignment in functions:
             functions.append(command[:command.index("=")])
             functions_lambdas[command[:command.index("=")]] = lambda a: functions_lambdas[assignment](a)
-        if type(assignment) != list:
-            variables[command[:command.index("=")]] = assignment
-        else:
+        if type(assignment) == list:
             functions.append(command[:command.index("=")])
             functions_lambdas[command[:command.index("=")]] = lambda a: assignment[int(a)]
+        elif type(assignment) == dict:
+            functions.append(command[:command.index("=")])
+            functions_lambdas[command[:command.index("=")]] = lambda a: assignment[a]
+        else:
+            variables[command[:command.index("=")]] = assignment
     else:
         return
 

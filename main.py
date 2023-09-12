@@ -89,6 +89,8 @@ def expression_eval(tokens: List[str], functions, functions_lambdas) -> float:
             if tokens[i] in op_priority:
                 return expression_eval(tokens[:i-1] + [str(ops_lambdas[tokens[i]](expression_eval([tokens[i-1]], functions, functions_lambdas), expression_eval([tokens[i+1]], functions, functions_lambdas)))] + tokens[i+2:], functions, functions_lambdas)
     # No operators
+    if tokens[0][0] == '"':
+        return tokens[0][1:-1]
     try:
         f = float(tokens[0])
         if (f == int(f)):
@@ -124,23 +126,23 @@ def parse(expression: str) -> List[str]:
             if(number(current_token)):
                 tokens.append(current_token)
                 current_token = ""
-            if c in "()+-*/^%|<>":
+            if '"' not in current_token and c in "()+-*/^%|<>":
                 if current_token != "":
                     tokens.append(current_token)
                     current_token = ""
                 tokens.append(c)
-            elif len(current_token) > 0 and (current_token[-1] == "<" and c == "=" or current_token[-1] == ">" and c == "=" or current_token[-1] == "=" and c == "=" or current_token[-1] == "!" and c == "=" or current_token[-1] == "o" and c == "r"):
+            elif '"' not in current_token and len(current_token) > 0 and (current_token[-1] == "<" and c == "=" or current_token[-1] == ">" and c == "=" or current_token[-1] == "=" and c == "=" or current_token[-1] == "!" and c == "=" or current_token[-1] == "o" and c == "r"):
                 if len(current_token) > 1:
                     tokens.append(current_token[:-1])
                 tokens.append(current_token[-1] + c)
                 current_token = ""
-            elif len(current_token) > 1 and (current_token[-2:] == "an" and c == "d"):
+            elif '"' not in current_token and len(current_token) > 1 and (current_token[-2:] == "an" and c == "d"):
                 if len(current_token) > 2:
                     tokens.append(current_token[:-2])
                 tokens.append(current_token[-2:] + c)
                 current_token = ""
             elif c == '"' and '"' in current_token:
-                tokens.append(current_token[1:])
+                tokens.append(current_token + c)
                 current_token = ""
             else:
                 current_token += c
@@ -233,7 +235,7 @@ def substitute_variables(expression: str, variables: Dict[str, str], message) ->
     for variable in variables.keys():
         if(type(variables[variable]) != list and type(variables[variable]) != dict):
             if(type(variables[variable]) == str):
-                expression = expression.replace(f"${variable}$", f'{variables[variable]}')
+                expression = expression.replace(f"${variable}$", f'"{variables[variable]}"')
             else:
                 expression = expression.replace(f"${variable}$", str(variables[variable]))
     print(f"Substitute variables output: {expression}")

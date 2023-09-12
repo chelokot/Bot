@@ -258,12 +258,19 @@ def process_assignment_expression(expression: str, functions, functions_lambdas)
 
         square_brackets_count = 0
         curly_brackets_count = 0
-        
 
         for char in elems_string:
             if char == '"':
                 in_str = not in_str
-            if char == "," and not in_str:
+            if char == "[" and not in_str:
+                square_brackets_count += 1
+            if char == "]" and not in_str:
+                square_brackets_count -= 1
+            if char == "{" and not in_str:
+                curly_brackets_count += 1
+            if char == "}" and not in_str:
+                curly_brackets_count -= 1
+            if char == "," and not in_str and square_brackets_count == 0 and curly_brackets_count == 0:
                 elems.append(elem)
                 elem = ''
             else:

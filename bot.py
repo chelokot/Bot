@@ -54,6 +54,7 @@ programs = {}
 c = db["macros"]
 for macro in c.find():
     print(f"macro: {macro}")
+    time.sleep(1)
     try:
         programs[(macro['trigger'], macro['chat_id'])] = macro['program']
     except:
@@ -89,7 +90,7 @@ def bind(message):
         # Save the program code to the database
         # c.execute("INSERT INTO macros VALUES (?, ?, ?)", (message.text[11:], program_code, message.chat.id))
         # conn.commit()
-        с = db["macros"]
+        c = db["macros"]
         c.insert_one({'trigger': message.text[11:], 'program': program_code, 'chat_id': message.chat.id})
         bot.send_message(message.chat.id, "Macro created")
         print(programs)
@@ -113,7 +114,7 @@ def start(message):
         languages[message.from_user.id] = 'uk'
         # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
         # conn.commit()
-        с = db["languages"]
+        c = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     bot.send_message(message.chat.id, hello_message[languages[message.from_user.id]], parse_mode='HTML')
 
@@ -321,7 +322,7 @@ Použijte /superbindings k zobrazení všech maker v chatu
         languages[message.from_user.id] = 'uk'
         # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
         # conn.commit()
-        с = db["languages"]
+        c = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     print(languages[message.from_user.id])
     print(macros_description[languages[message.from_user.id]])
@@ -439,7 +440,7 @@ return $s$;</code>
         languages[message.from_user.id] = 'uk'
         # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
         # conn.commit()
-        с = db["languages"]
+        c = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     bot.send_message(message.chat.id, examples_text[languages[message.from_user.id]], parse_mode='HTML')
 
@@ -514,7 +515,7 @@ def settings(message):
         languages[message.from_user.id] = 'uk'
         # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
         # conn.commit()
-        с = db["languages"]
+        c = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     bot.send_message(message.chat.id, settings_text[languages[message.from_user.id]], parse_mode='HTML')
 
@@ -527,7 +528,7 @@ def language_uk(message):
     # if c.rowcount == 0:
     #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
     # conn.commit()
-    с = db["languages"]
+    c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'uk'}})
     bot.reply_to(message, "Ваша мова успішно змінена на українську")
 
@@ -538,7 +539,7 @@ def language_ru(message):
     # if c.rowcount == 0:
     #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'ru'))
     # conn.commit()
-    с = db["languages"]
+    c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'ru'}})
     bot.reply_to(message, "Ваш язык успешно изменен на русский")
 
@@ -549,7 +550,7 @@ def language_en(message):
     # if c.rowcount == 0:
     #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'en'))
     # conn.commit()
-    с = db["languages"]
+    c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'en'}})
     bot.reply_to(message, "Your language has been successfully changed to English")
 
@@ -560,7 +561,7 @@ def language_de(message):
     # if c.rowcount == 0:
     #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'de'))
     # conn.commit()
-    с = db["languages"]
+    c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'de'}})
     bot.reply_to(message, "Ihre Sprache wurde erfolgreich auf Deutsch geändert")
 
@@ -571,7 +572,7 @@ def language_be(message):
     # if c.rowcount == 0:
     #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'be'))
     # conn.commit()
-    с = db["languages"]
+    c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'be'}})
     bot.reply_to(message, "Ваша мова успішно зменена на беларускую")
 
@@ -582,7 +583,7 @@ def language_pl(message):
     # if c.rowcount == 0:
     #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'pl'))
     # conn.commit()
-    с = db["languages"]
+    c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'pl'}})
     bot.reply_to(message, "Twoja język został pomyślnie zmieniony na polski")
 
@@ -593,7 +594,7 @@ def language_cs(message):
     # if c.rowcount == 0:
     #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'cs'))
     # conn.commit()
-    с = db["languages"]
+    c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'cs'}})
     bot.reply_to(message, "Váš jazyk byl úspěšně změněn na češtinu")
 
@@ -604,7 +605,7 @@ def superunbind(message):
         languages[message.from_user.id] = 'uk'
         # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
         # conn.commit()
-        с = db["languages"]
+        c = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     if (message.text[13:], str(message.chat.id)) in programs:
         del programs[(message.text[13:], str(message.chat.id))]
@@ -618,7 +619,7 @@ def superbindings(message):
         languages[message.from_user.id] = 'uk'
         # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
         # conn.commit()
-        с = db["languages"]
+        c = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
 
     macros_title = {

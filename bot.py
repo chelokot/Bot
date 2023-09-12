@@ -614,8 +614,8 @@ def echo_message(message):
     #bot.leave_chat(-1001756869879)
     print(message.text)
     print(programs.keys())
-    
-    if message.text == '/':
+
+    if message.text == '\\':
         try:
             reply_to = message.reply_to_message.text
             try:

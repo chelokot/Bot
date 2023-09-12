@@ -355,9 +355,11 @@ def execute_command(command: str, variables: Dict[str, str], message, functions,
             functions_lambdas[command[:command.index("=")]] = lambda a: assignment[a]
         elif type(assignment) == dict:
             functions.append(command[:command.index("=")])
-            if type(a) == str and a[0] == '"':
-                a = a[1:-1]
-            functions_lambdas[command[:command.index("=")]] = lambda a: assignment[a]
+            def f(a: str):
+                if type(a) == str and a[0] == '"':
+                    a = a[1:-1]
+                return assignment[a]
+            functions_lambdas[command[:command.index("=")]] = f
         else:
             variables[command[:command.index("=")]] = assignment
     else:

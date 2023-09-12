@@ -54,8 +54,10 @@ programs = {}
 c = db["macros"]
 for macro in c.find():
     print(f"macro: {macro}")
-    time.sleep(1)
-    programs[(macro['trigger'], macro['chat_id'])] = macro['program']
+    try:
+        programs[(macro['trigger'], macro['chat_id'])] = macro['program']
+    except:
+        pass
 print(programs)
 
 
@@ -66,8 +68,10 @@ languages = {}
 c = db["languages"]
 for user in c.find():
     print(f"user: {user}")
-    time.sleep(1)
-    languages[user['user_id']] = user['language']
+    try:
+        languages[user['user_id']] = user['language']
+    except:
+        pass
 print(languages)
 
 

@@ -614,6 +614,18 @@ def echo_message(message):
     #bot.leave_chat(-1001756869879)
     print(message.text)
     print(programs.keys())
+    
+    if message.text == '/':
+        try:
+            reply_to = message.reply_to_message.text
+            try:
+                result = execute_program(reply_to, {}, message = message)
+                bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
+            except Exception as e:
+                bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())
+        except:
+            pass
+
     for (program, chat_id) in programs.keys():
         if message.chat.id == int(chat_id):
             def action():

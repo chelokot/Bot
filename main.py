@@ -180,7 +180,9 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
     print(f"Execute input: {program_code}, {variables}")
 
     clear = lambda s: s.replace("\n", ";").replace("\t", "").replace(" ", "").replace("'", '"')
-    program_code = '"'.join([clear(line) if i % 2 == 0 else line for i, line in enumerate(program_code.split('"'))]) + ";"
+    program_code = '"'.join([clear(line) if i % 2 == 0 else line for i, line in enumerate(program_code.split('"'))])
+    if program_code[-1] != ";":
+        program_code += ";"
 
     print(f"Cleared: {program_code}")
     

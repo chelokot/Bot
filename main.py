@@ -166,7 +166,7 @@ from typing import Dict
 from copy import deepcopy
 def execute_program(program_code: str, variables: Dict[str, str], message, functions = None, functions_lambdas = None) -> str:
     if 'return' in variables.keys():
-        if type(variables['return']) == int:
+        if type(variables['return']) != str:
             return str(variables['return'])
         return variables['return'].replace('"', '')
     if program_code == "":

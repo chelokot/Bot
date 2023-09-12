@@ -621,7 +621,7 @@ def echo_message(message):
                     result = execute_program(programs[(program, chat_id)], {}, message = message)
                     bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
                 except Exception as e:
-                    bot.reply_to(message, str(e) + "\n" + traceback.format_exc() + "\n" + str(sys.exc_info()[2]))    
+                    bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())    
             if program[0:2] == '-r':
                 import regex
                 if regex.search(program[3:], message.text):

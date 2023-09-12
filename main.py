@@ -71,6 +71,8 @@ def expression_eval(tokens: List[str], functions, functions_lambdas) -> float:
     for function in functions:
         for i in range(len(tokens)):
             if tokens[i] == function:
+                if(len(tokens) == 1):
+                    return function
                 result = functions_lambdas[function](expression_eval([tokens[i+1]], functions, functions_lambdas))
                 if type(result) == list or type(result) == dict:
                     new_variable_name = f"__{function}_{random.randint(0, 1000000)}__"
@@ -307,6 +309,8 @@ def execute_command(command: str, variables: Dict[str, str], message, functions,
     command = command.replace('return', 'return=')
     if '=' in command:
         assignment = process_assignment_expression(command[command.index("=") + 1:], functions, functions_lambdas)
+        if assignment in functions.keys():
+            functions[command[:command.index("=")]] = functions[assignment]
         if type(assignment) != list:
             variables[command[:command.index("=")]] = assignment
         else:

@@ -27,31 +27,45 @@ bot = telebot.TeleBot(token=bot_token)
 from main import execute_program
 
 # We use database to store the macros
-import sqlite3
-conn = sqlite3.connect('macros.db', check_same_thread=False)
-c = conn.cursor()
+# import sqlite3
+# conn = sqlite3.connect('macros.db', check_same_thread=False)
+# c = conn.cursor()
+import pymongo
+from pymongo import MongoClient
+client = MongoClient(os.getenv('MONGODB_URI'))
+db = client[os.getenv('MONGODB_NAME')]
 
-# Create table of macros if it doesn't exist
-c.execute('''CREATE TABLE IF NOT EXISTS macros
-                (trigger text, program text, chat_id text)''')
-conn.commit()
+# # Create table of macros if it doesn't exist
+# c.execute('''CREATE TABLE IF NOT EXISTS macros
+#                 (trigger text, program text, chat_id text)''')
+# conn.commit()
+#
 
 # Create table of selected languages if it doesn't exist
-c.execute('''CREATE TABLE IF NOT EXISTS languages
-                (user_id text, language text)''')
-conn.commit()
+# c.execute('''CREATE TABLE IF NOT EXISTS languages
+#                 (user_id text, language text)''')
+# conn.commit()
+#
 
 programs = {}
 # Get all macros from the database
-for row in c.execute('SELECT * FROM macros'):
-    programs[(row[0], row[2])] = row[1]
+# for row in c.execute('SELECT * FROM macros'):
+#     programs[(row[0], row[2])] = row[1]
+c = db["macros"]
+for macro in c.find():
+    programs[(macro['trigger'], macro['chat_id'])] = macro['program']
 print(programs)
 
+
 languages = {}
-# Get all languages from the database
-for row in c.execute('SELECT * FROM languages'):
-    languages[int(row[0])] = row[1]
+# # Get all languages from the database
+# for row in c.execute('SELECT * FROM languages'):
+#     languages[int(row[0])] = row[1]
+c = db["languages"]
+for user in c.find():
+    languages[user['user_id']] = user['language']
 print(languages)
+
 
 @bot.message_handler(commands=['superbind'])
 def bind(message):
@@ -65,8 +79,11 @@ def bind(message):
         # Save the program code to the dictionary
         programs[(message.text[11:], message.chat.id)] = program_code
         # Save the program code to the database
-        c.execute("INSERT INTO macros VALUES (?, ?, ?)", (message.text[11:], program_code, message.chat.id))
-        conn.commit()
+        # c.execute("INSERT INTO macros VALUES (?, ?, ?)", (message.text[11:], program_code, message.chat.id))
+        # conn.commit()
+        с = db["macros"]
+        c.insert_one({'trigger': message.text[11:], 'program': program_code, 'chat_id': message.chat.id})
+        bot.send_message(message.chat.id, "Macro created")
         print(programs)
     else:
         bot.send_message(message.chat.id, "Please reply to a message.")
@@ -86,8 +103,10 @@ def start(message):
     }
     if message.from_user.id not in languages:
         languages[message.from_user.id] = 'uk'
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-        conn.commit()
+        # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
+        # conn.commit()
+        с = db["languages"]
+        c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     bot.send_message(message.chat.id, hello_message[languages[message.from_user.id]], parse_mode='HTML')
 
 @bot.message_handler(commands=['help'])
@@ -292,8 +311,10 @@ Použijte /superbindings k zobrazení všech maker v chatu
     }
     if message.from_user.id not in languages:
         languages[message.from_user.id] = 'uk'
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-        conn.commit()
+        # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
+        # conn.commit()
+        с = db["languages"]
+        c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     print(languages[message.from_user.id])
     print(macros_description[languages[message.from_user.id]])
     bot.send_message(message.chat.id, macros_description[languages[message.from_user.id]], parse_mode='HTML')
@@ -408,8 +429,10 @@ return $s$;</code>
 """,}
     if message.from_user.id not in languages:
         languages[message.from_user.id] = 'uk'
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-        conn.commit()
+        # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
+        # conn.commit()
+        с = db["languages"]
+        c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     bot.send_message(message.chat.id, examples_text[languages[message.from_user.id]], parse_mode='HTML')
 
 @bot.message_handler(commands=['settings'])
@@ -481,8 +504,10 @@ def settings(message):
     }
     if message.from_user.id not in languages:
         languages[message.from_user.id] = 'uk'
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-        conn.commit()
+        # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
+        # conn.commit()
+        с = db["languages"]
+        c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     bot.send_message(message.chat.id, settings_text[languages[message.from_user.id]], parse_mode='HTML')
 
 
@@ -490,64 +515,78 @@ def settings(message):
 @bot.message_handler(commands=['language_uk'])
 def language_uk(message):
     languages[message.from_user.id] = 'uk'
-    c.execute("UPDATE languages SET language = 'uk' WHERE user_id = ?", (message.from_user.id,))
-    if c.rowcount == 0:
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-    conn.commit()
+    # c.execute("UPDATE languages SET language = 'uk' WHERE user_id = ?", (message.from_user.id,))
+    # if c.rowcount == 0:
+    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
+    # conn.commit()
+    с = db["languages"]
+    c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'uk'}})
     bot.reply_to(message, "Ваша мова успішно змінена на українську")
 
 @bot.message_handler(commands=['language_ru'])
 def language_ru(message):
     languages[message.from_user.id] = 'ru'
-    c.execute("UPDATE languages SET language = 'ru' WHERE user_id = ?", (message.from_user.id,))
-    if c.rowcount == 0:
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'ru'))
-    conn.commit()
+    # c.execute("UPDATE languages SET language = 'ru' WHERE user_id = ?", (message.from_user.id,))
+    # if c.rowcount == 0:
+    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'ru'))
+    # conn.commit()
+    с = db["languages"]
+    c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'ru'}})
     bot.reply_to(message, "Ваш язык успешно изменен на русский")
 
 @bot.message_handler(commands=['language_en'])
 def language_en(message):
     languages[message.from_user.id] = 'en'
-    c.execute("UPDATE languages SET language = 'en' WHERE user_id = ?", (message.from_user.id,))
-    if c.rowcount == 0:
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'en'))
-    conn.commit()
+    # c.execute("UPDATE languages SET language = 'en' WHERE user_id = ?", (message.from_user.id,))
+    # if c.rowcount == 0:
+    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'en'))
+    # conn.commit()
+    с = db["languages"]
+    c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'en'}})
     bot.reply_to(message, "Your language has been successfully changed to English")
 
 @bot.message_handler(commands=['language_de'])
 def language_de(message):
     languages[message.from_user.id] = 'de'
-    c.execute("UPDATE languages SET language = 'de' WHERE user_id = ?", (message.from_user.id,))
-    if c.rowcount == 0:
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'de'))
-    conn.commit()
+    # c.execute("UPDATE languages SET language = 'de' WHERE user_id = ?", (message.from_user.id,))
+    # if c.rowcount == 0:
+    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'de'))
+    # conn.commit()
+    с = db["languages"]
+    c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'de'}})
     bot.reply_to(message, "Ihre Sprache wurde erfolgreich auf Deutsch geändert")
 
 @bot.message_handler(commands=['language_be'])
 def language_be(message):
     languages[message.from_user.id] = 'be'
-    c.execute("UPDATE languages SET language = 'be' WHERE user_id = ?", (message.from_user.id,))
-    if c.rowcount == 0:
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'be'))
-    conn.commit()
+    # c.execute("UPDATE languages SET language = 'be' WHERE user_id = ?", (message.from_user.id,))
+    # if c.rowcount == 0:
+    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'be'))
+    # conn.commit()
+    с = db["languages"]
+    c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'be'}})
     bot.reply_to(message, "Ваша мова успішно зменена на беларускую")
 
 @bot.message_handler(commands=['language_pl'])
 def language_pl(message):
     languages[message.from_user.id] = 'pl'
-    c.execute("UPDATE languages SET language = 'pl' WHERE user_id = ?", (message.from_user.id,))
-    if c.rowcount == 0:
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'pl'))
-    conn.commit()
+    # c.execute("UPDATE languages SET language = 'pl' WHERE user_id = ?", (message.from_user.id,))
+    # if c.rowcount == 0:
+    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'pl'))
+    # conn.commit()
+    с = db["languages"]
+    c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'pl'}})
     bot.reply_to(message, "Twoja język został pomyślnie zmieniony na polski")
 
 @bot.message_handler(commands=['language_cs'])
 def language_cs(message):
     languages[message.from_user.id] = 'cs'
-    c.execute("UPDATE languages SET language = 'cs' WHERE user_id = ?", (message.from_user.id,))
-    if c.rowcount == 0:
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'cs'))
-    conn.commit()
+    # c.execute("UPDATE languages SET language = 'cs' WHERE user_id = ?", (message.from_user.id,))
+    # if c.rowcount == 0:
+    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'cs'))
+    # conn.commit()
+    с = db["languages"]
+    c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'cs'}})
     bot.reply_to(message, "Váš jazyk byl úspěšně změněn na češtinu")
 
 
@@ -555,8 +594,10 @@ def language_cs(message):
 def superunbind(message):
     if message.from_user.id not in languages:
         languages[message.from_user.id] = 'uk'
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-        conn.commit()
+        # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
+        # conn.commit()
+        с = db["languages"]
+        c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     if (message.text[13:], str(message.chat.id)) in programs:
         del programs[(message.text[13:], str(message.chat.id))]
         bot.reply_to(message, "Макрос успішно видалено")
@@ -567,9 +608,11 @@ def superunbind(message):
 def superbindings(message):
     if message.from_user.id not in languages:
         languages[message.from_user.id] = 'uk'
-        c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-        conn.commit()
-
+        # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
+        # conn.commit()
+        с = db["languages"]
+        c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
+        
     macros_title = {
         'uk': "Макроси",
         'ru': "Макросы",

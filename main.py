@@ -150,6 +150,11 @@ def parse(expression: str) -> List[str]:
 from typing import Dict
 from copy import deepcopy
 def execute_program(program_code: str, variables: Dict[str, str], message, functions = None, functions_lambdas = None) -> str:
+    if 'return' in variables.keys():
+        return variables['return'].replace('"', '')
+    if program_code == "":
+        return ""
+    
     if functions == None:
         functions = deepcopy(default_functions)
     if functions_lambdas == None:
@@ -159,10 +164,8 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
 
     clear = lambda s: s.replace("\n", "").replace("\t", "").replace(" ", "").replace("'", '"')
     program_code = '"'.join([clear(line) if i % 2 == 0 else line for i, line in enumerate(program_code.split('"'))])
-    if 'return' in variables.keys():
-        return variables['return'].replace('"', '')
-    if program_code == "":
-        return ""
+
+    print(f"Cleared: {program_code}")
     
     if program_code.startswith("if"):
         matching_parenthesis = -1

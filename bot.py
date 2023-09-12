@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 import time, random
 default_print = print
 def print(*args, **kwargs):
@@ -603,7 +606,7 @@ def one_time_execute(message):
         result = execute_program(message.reply_to_message.text, {}, message = message)
         bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
     except Exception as e:
-        bot.reply_to(message, e)
+        bot.reply_to(message, str(e) + "\n" + traceback.format_exc() + "\n" + sys.exc_info()[2])
 
 
 @bot.message_handler(func=lambda message: True)
@@ -614,12 +617,11 @@ def echo_message(message):
     for (program, chat_id) in programs.keys():
         if message.chat.id == int(chat_id):
             def action():
-                user_id = message.from_user.id
                 try:
                     result = execute_program(programs[(program, chat_id)], {}, message = message)
                     bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
                 except Exception as e:
-                    bot.reply_to(message, e)       
+                    bot.reply_to(message, str(e) + "\n" + traceback.format_exc() + "\n" + sys.exc_info()[2])    
             if program[0:2] == '-r':
                 import regex
                 if regex.search(program[3:], message.text):

@@ -89,20 +89,21 @@ def expression_eval(tokens: List[str], functions, functions_lambdas) -> float:
             if tokens[i] in op_priority:
                 return expression_eval(tokens[:i-1] + [str(ops_lambdas[tokens[i]](expression_eval([tokens[i-1]], functions, functions_lambdas), expression_eval([tokens[i+1]], functions, functions_lambdas)))] + tokens[i+2:], functions, functions_lambdas)
     # No operators
-    if tokens[0][0] == '"':
-        return tokens[0][1:-1]
-    try:
-        f = float(tokens[0])
-        if (f == int(f)):
-            return int(f)
-        return f
-    except ValueError:
-        if tokens[0] == "True":
-            return True
-        elif tokens[0] == "False":
-            return False
-        else:
-            return tokens[0]
+    if tokens[0][0] != '"':
+        try:
+            f = float(tokens[0])
+            if (f == int(f)):
+                return int(f)
+            return f
+        except ValueError:
+            if tokens[0] == "True":
+                return True
+            elif tokens[0] == "False":
+                return False
+            else:
+                return tokens[0]
+    else:
+        return tokens[0]
 
 def number(s: str) -> bool:
     try:
@@ -351,9 +352,11 @@ def execute_command(command: str, variables: Dict[str, str], message, functions,
             functions_lambdas[command[:command.index("=")]] = lambda a: functions_lambdas[assignment](a)
         if type(assignment) == list:
             functions.append(command[:command.index("=")])
-            functions_lambdas[command[:command.index("=")]] = lambda a: assignment[int(a)]
+            functions_lambdas[command[:command.index("=")]] = lambda a: assignment[a]
         elif type(assignment) == dict:
             functions.append(command[:command.index("=")])
+            if type(a) == str and a[0] == '"':
+                a = a[1:-1]
             functions_lambdas[command[:command.index("=")]] = lambda a: assignment[a]
         else:
             variables[command[:command.index("=")]] = assignment

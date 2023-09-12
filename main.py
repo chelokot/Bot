@@ -89,7 +89,7 @@ def expression_eval(tokens: List[str], functions, functions_lambdas) -> float:
                     while new_variable_name in functions:
                         new_variable_name = f"__{function}_{random.randint(0, 1000000)}__"
                     functions.append(new_variable_name)
-                    functions_lambdas[new_variable_name] = lambda a: result[int(a)]
+                    functions_lambdas[new_variable_name] = lambda a: result[a]
                     return expression_eval(tokens[:i] + [new_variable_name] + tokens[i+2:], functions, functions_lambdas)
                 else:
                     return expression_eval(tokens[:i] + [str(result)] + tokens[i+2:], functions, functions_lambdas)

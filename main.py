@@ -258,6 +258,7 @@ def process_assignment_expression(expression: str, functions, functions_lambdas)
     if expression[0] == '"':
         return expression[1:-1]
     elif expression[0] == "[":
+        # (possibly nested) list
         elems_string = expression[1:-1]
         elems = []
         elem = ''
@@ -285,6 +286,40 @@ def process_assignment_expression(expression: str, functions, functions_lambdas)
         elems.append(elem)
         elems = map(lambda x: process_assignment_expression(x, functions, functions_lambdas), elems)
         return list(elems)
+    elif expression[0] == "{":
+        # (possibly nested) dict
+        elems_string = expression[1:-1]
+        keys = []
+        values = []
+        elem = ''
+        in_str = False
+
+        square_brackets_count = 0
+        curly_brackets_count = 0
+
+        for char in elems_string:
+            if char == '"':
+                in_str = not in_str
+            if char == "[" and not in_str:
+                square_brackets_count += 1
+            if char == "]" and not in_str:
+                square_brackets_count -= 1
+            if char == "{" and not in_str:
+                curly_brackets_count += 1
+            if char == "}" and not in_str:
+                curly_brackets_count -= 1
+            if char == ":" and not in_str and square_brackets_count == 0 and curly_brackets_count == 0:
+                keys.append(elem)
+                elem = ''
+            elif char == "," and not in_str and square_brackets_count == 0 and curly_brackets_count == 0:
+                values.append(elem)
+                elem = ''
+            else:
+                elem += char
+        values.append(elem)
+        keys = map(lambda x: process_assignment_expression(x, functions, functions_lambdas), keys)
+        values = map(lambda x: process_assignment_expression(x, functions, functions_lambdas), values)
+        return dict(zip(keys, values))
     elif expression[0:2] == "re":
         # Example: re "g/([0-9]+) ([0-9]+)/\\1 + \\2/"" "1 2" 
         # -> "1 + 2"

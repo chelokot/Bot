@@ -1,6 +1,7 @@
 import time, random
+default_print = print
 def print(*args, **kwargs):
-    print(*args, **kwargs)
+    default_print(*args, **kwargs)
     while True:
         try:
             f = open('/home/andrew/var/log/main_log.txt', 'a+')

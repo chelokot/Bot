@@ -309,8 +309,9 @@ def execute_command(command: str, variables: Dict[str, str], message, functions,
     command = command.replace('return', 'return=')
     if '=' in command:
         assignment = process_assignment_expression(command[command.index("=") + 1:], functions, functions_lambdas)
-        if assignment in functions.keys():
-            functions[command[:command.index("=")]] = functions[assignment]
+        if assignment in functions:
+            functions.append(command[:command.index("=")])
+            functions_lambdas[command[:command.index("=")]] = lambda a: functions_lambdas[assignment](a)
         if type(assignment) != list:
             variables[command[:command.index("=")]] = assignment
         else:

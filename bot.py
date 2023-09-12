@@ -606,7 +606,7 @@ def one_time_execute(message):
         result = execute_program(message.reply_to_message.text, {}, message = message)
         bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
     except Exception as e:
-        bot.reply_to(message, str(e) + "\n" + traceback.format_exc() + "\n" + sys.exc_info()[2])
+        bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())
 
 
 @bot.message_handler(func=lambda message: True)

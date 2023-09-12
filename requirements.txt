@@ -2,3 +2,4 @@ pytelegrambotapi
 regex
 python-dotenv
 requests
+pymongo

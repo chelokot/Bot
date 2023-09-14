@@ -200,8 +200,8 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
         
         first_subprogram_start = matching_parenthesis + 1
         first_subprogram_end = -1
-        parenthesis_count = 1
-        for i in range(first_subprogram_start + 1, len(program_code)):
+        parenthesis_count = 0
+        for i in range(first_subprogram_start, len(program_code)):
             if program_code[i] == "{":
                 parenthesis_count += 1
             elif program_code[i] == "}":

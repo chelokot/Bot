@@ -695,8 +695,6 @@ def echo_message(message):
             else:
                 if program in message.text:
                     action()
-bot.polling()
-
 
 from ruiji import img_search
 # Handle image messages
@@ -704,7 +702,8 @@ from ruiji import img_search
 def handle_docs_photo(message):
     # Check that the message in direct chat
     if message.chat.type != 'private':
-        bot.reply_to(message, f"Please send me this image in private chat, your chat id is {message.chat.type}")
+        pass
+        #bot.reply_to(message, f"Please send me this image in private chat, your chat id is {message.chat.type}")
     try:
         file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
@@ -714,3 +713,5 @@ def handle_docs_photo(message):
         bot.reply_to(message, img_search(src))
     except Exception as e:
         bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())
+
+bot.polling()

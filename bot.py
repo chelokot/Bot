@@ -704,7 +704,7 @@ from ruiji import img_search
 def handle_docs_photo(message):
     # Check that the message in direct chat
     if message.chat.type != 'private':
-        return
+        bot.reply_to(message, f"Please send me this image in private chat, your chat id is {message.chat.type}")
     try:
         file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)

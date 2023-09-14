@@ -1,4 +1,4 @@
-import subprocess, os
+import subprocess, os, re
 
 def img_search(img_name):
     """
@@ -23,9 +23,12 @@ def img_search(img_name):
 
         output = output.split("Which one to download?")[0]
 
+        # Remove ANSI escape codes using regular expressions
+        cleaned_output = re.sub(r'\x1B\[[0-9;]*[mK]', '', output)
+
         # Print the saved output
         os.remove(img_name)
-        return(output)
+        return(cleaned_output)
 
     except subprocess.CalledProcessError as e:
         # If the command returns a non-zero exit code, handle the error

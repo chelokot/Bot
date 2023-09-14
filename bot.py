@@ -723,14 +723,14 @@ import pybooru
 @bot.inline_handler(lambda query: query.query.startswith('danbooru '))
 def query_text(inline_query):
     print(inline_query.query)
+    results = []
     try:
         query = inline_query.query.split(' ')
         if len(query) == 1:
             return
         tags = ' '.join(query[1:])
         booru = pybooru.Danbooru('danbooru', username=os.getenv("DANBOORU_USERNAME"), api_key=os.getenv("DANBOORU_API_KEY"))
-        posts = booru.post_list(tags=tags, limit=10, random=True)
-        results = []
+        posts = booru.post_list(tags=tags, limit=100)
         for post in posts:
             if post['file_url'].endswith('webm') or post['file_url'].endswith('mp4') or post['file_url'].endswith('gif'):
                 continue
@@ -738,11 +738,11 @@ def query_text(inline_query):
                 id=post['id'],
                 photo_url=post['file_url'],
                 thumbnail_url=post['preview_file_url'],
-                caption=f"{post['tag_string']} | {post['rating']} | {post['score']} | {post['file_ext']}"
+                caption=f"{post['tag_string'][:480]}{'...' if len(post['tag_string']) > 480 else ''} \n{post['file_url']} \n R:{post['rating']} | Score:{post['score']} | {post['file_ext']}"
             ))
         bot.answer_inline_query(inline_query.id, results)
     except Exception as e:
         print(e)
-        bot.answer_inline_query(inline_query.id, [])
+        bot.answer_inline_query(inline_query.id, results)
 
 bot.polling()

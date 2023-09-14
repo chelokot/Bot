@@ -702,8 +702,8 @@ from ruiji import img_search
 def handle_docs_photo(message):
     # Check that the message in direct chat
     if message.chat.type != 'private':
-        pass
         #bot.reply_to(message, f"Please send me this image in private chat, your chat id is {message.chat.type}")
+        return
     try:
         file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
@@ -711,7 +711,7 @@ def handle_docs_photo(message):
 
         # Create folder if not exists
         if not os.path.exists('images'):
-            os.makedirs('images')
+            os.makedirs(src)
 
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)

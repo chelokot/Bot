@@ -708,6 +708,11 @@ def handle_docs_photo(message):
         file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
         src = 'images/' + file_info.file_path
+
+        # Create folder if not exists
+        if not os.path.exists('images'):
+            os.makedirs('images')
+
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)
         bot.reply_to(message, img_search(src))

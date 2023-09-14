@@ -719,3 +719,30 @@ def handle_docs_photo(message):
         bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())
 
 bot.polling()
+
+
+import pybooru
+# inline command for danbooru search
+@bot.inline_handler(lambda query: query.query.startswith('danbooru '))
+def query_text(inline_query):
+    try:
+        query = inline_query.query.split(' ')
+        if len(query) == 1:
+            return
+        tags = ' '.join(query[1:])
+        booru = pybooru.Danbooru('danbooru', username=os.getenv("DANBOORU_USERNAME"), api_key=os.getenv("DANBOORU_API_KEY"))
+        posts = booru.post_list(tags=tags, limit=10, random=True)
+        results = []
+        for post in posts:
+            if post['file_url'].endswith('webm') or post['file_url'].endswith('mp4') or post['file_url'].endswith('gif'):
+                continue
+            results.append(types.InlineQueryResultPhoto(
+                id=post['id'],
+                photo_url=post['file_url'],
+                thumb_url=post['preview_file_url'],
+                caption=f"{post['tag_string']} | {post['rating']} | {post['score']} | {post['file_ext']}"
+            ))
+        bot.answer_inline_query(inline_query.id, results)
+    except Exception as e:
+        print(e)
+        bot.answer_inline_query(inline_query.id, [])

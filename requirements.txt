@@ -3,3 +3,4 @@ regex
 python-dotenv
 requests
 pymongo
+pybooru

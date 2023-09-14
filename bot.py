@@ -734,12 +734,16 @@ def query_text(inline_query):
         for post in posts:
             if post['file_url'].endswith('webm') or post['file_url'].endswith('mp4') or post['file_url'].endswith('gif'):
                 continue
-            results.append(types.InlineQueryResultPhoto(
-                id=post['id'],
-                photo_url=post['file_url'],
-                thumbnail_url=post['preview_file_url'],
-                caption=f"{post['tag_string'][:480]}{'...' if len(post['tag_string']) > 480 else ''} \n{post['file_url']} \n R:{post['rating']} | Score:{post['score']} | {post['file_ext']}"
-            ))
+            try:
+                results.append(types.InlineQueryResultPhoto(
+                    id=post['id'],
+                    photo_url=post['file_url'],
+                    thumbnail_url=post['preview_file_url'],
+                    caption=f"{post['tag_string'][:480]}{'...' if len(post['tag_string']) > 480 else ''} \n{post['file_url']} \n R:{post['rating']} | Score:{post['score']} | {post['file_ext']}\n\nUsed seacrh query: {tags}",
+                ))
+            except Exception as e:
+                print(e)
+                continue
         bot.answer_inline_query(inline_query.id, results)
     except Exception as e:
         print(e)

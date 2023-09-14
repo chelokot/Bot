@@ -730,7 +730,7 @@ def query_text(inline_query):
             return
         tags = ' '.join(query[1:])
         booru = pybooru.Danbooru('danbooru', username=os.getenv("DANBOORU_USERNAME"), api_key=os.getenv("DANBOORU_API_KEY"))
-        posts = booru.post_list(tags=tags, limit=100)
+        posts = booru.post_list(tags=tags, limit=50)
         for post in posts:
             if post['file_url'].endswith('webm') or post['file_url'].endswith('mp4') or post['file_url'].endswith('gif'):
                 continue

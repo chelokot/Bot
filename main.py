@@ -213,8 +213,10 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
 
         execute_second = False
         if expression_eval(parse(substitute_variables(condition, variables, message)), functions, functions_lambdas):
+            print("Condition is true, executing first subprogram")
             execute_program(first_subprogram, variables, message, functions, functions_lambdas)
         else:
+            print("Condition is false")
             execute_second = True
         
         if program_code[first_subprogram_end + 1:].startswith("else"):
@@ -230,11 +232,13 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
                     second_subprogram_end = i
                     break
             second_subprogram = program_code[second_subprogram_start + 1:second_subprogram_end]
-            print('amogus3', second_subprogram)
             if execute_second:
+                print("Executing second subprogram")
                 execute_program(second_subprogram, variables, message, functions, functions_lambdas)
+            print("Finished executing if")
             return execute_program(program_code[second_subprogram_end + 1:], variables, message, functions, functions_lambdas)
         else:
+            print("Finished executing if")
             return execute_program(program_code[ first_subprogram_end + 1:], variables, message, functions, functions_lambdas)
             
     # starts with command

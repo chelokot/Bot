@@ -99,6 +99,8 @@ def expression_eval(tokens: List[str], functions, functions_lambdas) -> float:
             if tokens[i] in op_priority:
                 return expression_eval(tokens[:i-1] + [str(ops_lambdas[tokens[i]](expression_eval([tokens[i-1]], functions, functions_lambdas), expression_eval([tokens[i+1]], functions, functions_lambdas)))] + tokens[i+2:], functions, functions_lambdas)
     # No operators
+    if tokens[0] == '':
+        return ''
     if tokens[0][0] != '"':
         try:
             f = float(tokens[0])

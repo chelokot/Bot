@@ -718,9 +718,6 @@ def handle_docs_photo(message):
     except Exception as e:
         bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())
 
-bot.polling()
-
-
 import pybooru
 # inline command for danbooru search
 @bot.inline_handler(lambda query: query.query.startswith('danbooru '))
@@ -747,3 +744,5 @@ def query_text(inline_query):
     except Exception as e:
         print(e)
         bot.answer_inline_query(inline_query.id, [])
+
+bot.polling()

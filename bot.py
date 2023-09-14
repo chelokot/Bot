@@ -710,8 +710,7 @@ def handle_docs_photo(message):
         src = 'images/' + file_info.file_path
 
         # Create folder if not exists
-        if not os.path.exists('images'):
-            os.makedirs(src)
+        os.makedirs("/".join(src.split("/")[:-1]), exist_ok=True)
 
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)

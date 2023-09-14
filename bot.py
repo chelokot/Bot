@@ -739,7 +739,7 @@ def query_text(inline_query):
                     id=post['id'],
                     photo_url=post['file_url'],
                     thumbnail_url=post['preview_file_url'],
-                    caption=f"{post['tag_string'][:480]}{'...' if len(post['tag_string']) > 480 else ''} \n{post['file_url']} \n R:{post['rating']} | Score:{post['score']} | {post['file_ext']}\n\nUsed seacrh query: {tags}",
+                    caption=f"{post['tag_string'][:480]}{'...' if len(post['tag_string']) > 480 else ''} \ndanbooru.donmai.us/posts/{post['id']}\n R:{post['rating']} | Score:{post['score']} | {post['file_ext']}\n\nUsed seacrh query: {tags}",
                 ))
             except Exception as e:
                 print(e)

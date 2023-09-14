@@ -737,7 +737,7 @@ def query_text(inline_query):
             results.append(types.InlineQueryResultPhoto(
                 id=post['id'],
                 photo_url=post['file_url'],
-                thumb_url=post['preview_file_url'],
+                thumbnail_url=post['preview_file_url'],
                 caption=f"{post['tag_string']} | {post['rating']} | {post['score']} | {post['file_ext']}"
             ))
         bot.answer_inline_query(inline_query.id, results)

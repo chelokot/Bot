@@ -725,6 +725,7 @@ import pybooru
 # inline command for danbooru search
 @bot.inline_handler(lambda query: query.query.startswith('danbooru '))
 def query_text(inline_query):
+    print(inline_query.query)
     try:
         query = inline_query.query.split(' ')
         if len(query) == 1:

@@ -697,3 +697,20 @@ def echo_message(message):
                     action()
 bot.polling()
 
+
+from ruiji import img_search
+# Handle image messages
+@bot.message_handler(content_types=['photo'])
+def handle_docs_photo(message):
+    # Check that the message in direct chat
+    if message.chat.type != 'private':
+        return
+    try:
+        file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        src = 'images/' + file_info.file_path
+        with open(src, 'wb') as new_file:
+            new_file.write(downloaded_file)
+        bot.reply_to(message, img_search(src))
+    except Exception as e:
+        bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())

@@ -253,7 +253,7 @@ def substitute_variables(expression: str, variables: Dict[str, str], message) ->
     for variable in variables.keys():
         if(type(variables[variable]) != list and type(variables[variable]) != dict):
             if(type(variables[variable]) == str):
-                expression = expression.replace(f"${variable}$", f'"{variables[variable]}"')
+                expression = expression.replace(f"${variable}$", f'{variables[variable]}')
             else:
                 expression = expression.replace(f"${variable}$", str(variables[variable]))
     print(f"Substitute variables output: {expression}")

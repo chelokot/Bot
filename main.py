@@ -266,7 +266,7 @@ def substitute_variables(expression: str, variables: Dict[str, str], message) ->
                 break
         message_substitution = expression[message_substitution_start + 1:message_substitution_end]
         # check that message only contains letters, numbers and dots
-        if not all(c.isalnum() or c == "." for c in message_substitution):
+        if not all(c.isalnum() or c == "." or c == "_" for c in message_substitution):
             raise Exception("Message substitution contains illegal characters: " + message_substitution)
         message_substituted = eval(message_substitution)
         expression = expression[:message_substitution_start] + str(message_substituted) + expression[message_substitution_end + 1:]

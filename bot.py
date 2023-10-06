@@ -685,7 +685,8 @@ def echo_message(message):
             def action():
                 try:
                     result = execute_program(programs[(program, chat_id)], {}, message = message)
-                    bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
+                    if result != '':
+                        bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
                 except Exception as e:
                     bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc()[2048:])    
             if program[0:2] == '-r':

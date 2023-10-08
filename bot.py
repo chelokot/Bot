@@ -647,7 +647,8 @@ def bot_execute_program(program, message):
         c = db["global_variables"]
         c.update_one({'global': True}, {'$set': {'variables': global_variables}}, upsert=True)
 
-        bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
+        if result != "":
+            bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
     except Exception as e:
         bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())
 

@@ -660,11 +660,13 @@ def one_time_execute(message):
 
 
 import easyocr
+import os
+
 @bot.message_handler(commands=['text'])
 def handle_text_command(message):
     try:
         language = message.text.split(' ')[1]
-    except:
+    except IndexError:
         language = 'en'
     reader = easyocr.Reader([language])
     # Check if the message is a reply to another message with a photo
@@ -672,10 +674,11 @@ def handle_text_command(message):
         photo = message.reply_to_message.photo[-1]  # Get the highest resolution image
         file_info = bot.get_file(photo.file_id)
         file_path = file_info.file_path
-        file_url = f"https://api.telegram.org/file/bot{bot.token}/{file_path}"
         
         # Download the image
-        bot.download_file(file_path, 'image.jpg')
+        file_content = bot.download_file(file_path)
+        with open('image.jpg', 'wb') as image_file:
+            image_file.write(file_content)
         
         # Perform OCR on the image
         result = reader.readtext('image.jpg', paragraph=True)

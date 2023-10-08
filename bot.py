@@ -621,31 +621,33 @@ def superbindings(message):
 
 def bot_execute_program(program, message):
     try:
-        # Read dict of user variables from database
+        chat_id = message.chat.id
+
+        # Read dict of user variables from database specific to the chat
         c = db["user_variables"]
         user_variables = c.find_one({'user_id': message.from_user.id})
         if user_variables is None:
             user_variables = {}
         else:
             user_variables = user_variables['variables']
-        
-        # Read dict of global variables (shared between all users) from database
+
+        # Read dict of global variables (specific to the chat) from database
         c = db["global_variables"]
-        global_variables = c.find_one({'global': True})
+        global_variables = c.find_one({'chat_id': chat_id})
         if global_variables is None:
             global_variables = {}
         else:
             global_variables = global_variables['variables']
 
-        result = execute_program(program, {}, message = message, global_variables=global_variables, user_variables=user_variables)
+        result = execute_program(program, {}, message=message, global_variables=global_variables, user_variables=user_variables)
 
-        # Save dict of user variables to database
+        # Save dict of user variables to database specific to the chat
         c = db["user_variables"]
         c.update_one({'user_id': message.from_user.id}, {'$set': {'variables': user_variables}}, upsert=True)
 
-        # Save dict of global variables (shared between all users) to database
+        # Save dict of global variables (specific to the chat) to database
         c = db["global_variables"]
-        c.update_one({'global': True}, {'$set': {'variables': global_variables}}, upsert=True)
+        c.update_one({'chat_id': chat_id}, {'$set': {'variables': global_variables}}, upsert=True)
 
         if result != "":
             bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)

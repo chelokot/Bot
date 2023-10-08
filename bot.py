@@ -659,6 +659,42 @@ def one_time_execute(message):
     bot_execute_program(message.reply_to_message.text, message)
 
 
+import easyocr
+@bot.message_handler(commands=['text'])
+def handle_text_command(message):
+    try:
+        language = message.text.split(' ')[1]
+    except:
+        language = 'en'
+    reader = easyocr.Reader([language])
+    # Check if the message is a reply to another message with a photo
+    if message.reply_to_message and message.reply_to_message.photo:
+        photo = message.reply_to_message.photo[-1]  # Get the highest resolution image
+        file_info = bot.get_file(photo.file_id)
+        file_path = file_info.file_path
+        file_url = f"https://api.telegram.org/file/bot{bot.token}/{file_path}"
+        
+        # Download the image
+        bot.download_file(file_path, 'image.jpg')
+        
+        # Perform OCR on the image
+        result = reader.readtext('image.jpg', paragraph=True)
+        extracted_text = '\n'.join([item[1] for item in result])
+        
+        # Split the text into chunks of 4096 characters each
+        text_chunks = [extracted_text[i:i + 4096] for i in range(0, len(extracted_text), 4096)]
+        
+        # Send the text chunks as separate messages
+        for chunk in text_chunks:
+            bot.reply_to(message, chunk)
+
+        if os.path.exists('image.jpg'):
+            os.remove('image.jpg')
+        
+        if len(text_chunks) == 0:
+            bot.reply_to(message, f'No text found in {language} language. Use /text [language] to change language')
+
+
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
     #bot.leave_chat(-1001756869879)
@@ -736,43 +772,6 @@ def query_text(inline_query):
             bot.answer_inline_query(inline_query.id, results)
         except:
             pass
-
-
-import easyocr
-
-@bot.message_handler(commands=['text'])
-def handle_text_command(message):
-    try:
-        language = message.text.split(' ')[1]
-    except:
-        language = 'en'
-    reader = easyocr.Reader([language])
-    # Check if the message is a reply to another message with a photo
-    if message.reply_to_message and message.reply_to_message.photo:
-        photo = message.reply_to_message.photo[-1]  # Get the highest resolution image
-        file_info = bot.get_file(photo.file_id)
-        file_path = file_info.file_path
-        file_url = f"https://api.telegram.org/file/bot{bot.token}/{file_path}"
-        
-        # Download the image
-        bot.download_file(file_path, 'image.jpg')
-        
-        # Perform OCR on the image
-        result = reader.readtext('image.jpg', paragraph=True)
-        extracted_text = '\n'.join([item[1] for item in result])
-        
-        # Split the text into chunks of 4096 characters each
-        text_chunks = [extracted_text[i:i + 4096] for i in range(0, len(extracted_text), 4096)]
-        
-        # Send the text chunks as separate messages
-        for chunk in text_chunks:
-            bot.reply_to(message, chunk)
-
-        if os.path.exists('image.jpg'):
-            os.remove('image.jpg')
-        
-        if len(text_chunks) == 0:
-            bot.reply_to(message, f'No text found in {language} language. Use /text [language] to change language')
 
 
 bot.polling()

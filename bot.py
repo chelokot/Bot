@@ -619,9 +619,7 @@ def superbindings(message):
         bindings = f"⛓ {macros_title[languages[message.from_user.id]]}:\n" + bindings
     bot.reply_to(message, bindings, parse_mode='HTML')
 
-
-@bot.message_handler(commands=['execute'])
-def one_time_execute(message):
+def execute_program(program, message):
     try:
         # Read dict of user variables from database
         c = db["user_variables"]
@@ -639,7 +637,7 @@ def one_time_execute(message):
         else:
             global_variables = global_variables['variables']
 
-        result = execute_program(message.reply_to_message.text, {}, message = message, global_variables=global_variables, user_variables=user_variables)
+        result = execute_program(program, {}, message = message, global_variables=global_variables, user_variables=user_variables)
 
         # Save dict of user variables to database
         c = db["user_variables"]
@@ -653,6 +651,10 @@ def one_time_execute(message):
     except Exception as e:
         bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())
 
+@bot.message_handler(commands=['execute'])
+def one_time_execute(message):
+    execute_program(message.reply_to_message.text, message)
+
 
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
@@ -662,31 +664,19 @@ def echo_message(message):
 
     if message.text == '\\':
         try:
-            reply_to = message.reply_to_message.text
-            try:
-                result = execute_program(reply_to, {}, message = message)
-                bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
-            except Exception as e:
-                bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())
+            execute_program(message.reply_to_message.text, message)
         except:
             pass
 
     for (program, chat_id) in programs.keys():
-        if message.chat.id == int(chat_id):
-            def action():
-                try:
-                    result = execute_program(programs[(program, chat_id)], {}, message = message)
-                    if result != '':
-                        bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
-                except Exception as e:
-                    bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc()[2048:])    
+        if message.chat.id == int(chat_id): 
             if program[0:2] == '-r':
                 import regex
                 if regex.search(program[3:], message.text):
-                    action()
+                    execute_program(programs[(program, chat_id)], message)
             else:
                 if program in message.text:
-                    action()
+                    execute_program(programs[(program, chat_id)], message)
 
 from ruiji import img_search
 # Handle image messages

@@ -283,6 +283,18 @@ def substitute_variables(
                 expression = expression.replace(f"$user {user_variable}$", f'{user_variables[user_variable]}')
             else:
                 expression = expression.replace(f"$user {user_variable}$", str(user_variables[user_variable]))
+    for user_variable in user_variables.keys():
+        if(type(user_variables[user_variable]) != list and type(user_variables[user_variable]) != dict):
+            if(type(user_variables[user_variable]) == str):
+                expression = expression.replace(f"${user_variable}$", f'{user_variables[user_variable]}')
+            else:
+                expression = expression.replace(f"${user_variable}$", str(user_variables[user_variable]))
+    for global_variable in global_variables.keys():
+        if(type(global_variables[global_variable]) != list and type(global_variables[global_variable]) != dict):
+            if(type(global_variables[global_variable]) == str):
+                expression = expression.replace(f"${global_variable}$", f'{global_variables[global_variable]}')
+            else:
+                expression = expression.replace(f"${global_variable}$", str(global_variables[global_variable]))
     print(f"Substitute variables output: {expression}")
     while "$message." in expression:
         message_substitution_start = expression.index("$message.")

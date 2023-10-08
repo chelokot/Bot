@@ -515,8 +515,6 @@ def settings(message):
     }
     if message.from_user.id not in languages:
         languages[message.from_user.id] = 'uk'
-        # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-        # conn.commit()
         c = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     bot.send_message(message.chat.id, settings_text[languages[message.from_user.id]], parse_mode='HTML')
@@ -526,10 +524,6 @@ def settings(message):
 @bot.message_handler(commands=['language_uk'])
 def language_uk(message):
     languages[message.from_user.id] = 'uk'
-    # c.execute("UPDATE languages SET language = 'uk' WHERE user_id = ?", (message.from_user.id,))
-    # if c.rowcount == 0:
-    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-    # conn.commit()
     c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'uk'}})
     bot.reply_to(message, "Ваша мова успішно змінена на українську")
@@ -537,10 +531,6 @@ def language_uk(message):
 @bot.message_handler(commands=['language_ru'])
 def language_ru(message):
     languages[message.from_user.id] = 'ru'
-    # c.execute("UPDATE languages SET language = 'ru' WHERE user_id = ?", (message.from_user.id,))
-    # if c.rowcount == 0:
-    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'ru'))
-    # conn.commit()
     c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'ru'}})
     bot.reply_to(message, "Ваш язык успешно изменен на русский")
@@ -548,10 +538,6 @@ def language_ru(message):
 @bot.message_handler(commands=['language_en'])
 def language_en(message):
     languages[message.from_user.id] = 'en'
-    # c.execute("UPDATE languages SET language = 'en' WHERE user_id = ?", (message.from_user.id,))
-    # if c.rowcount == 0:
-    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'en'))
-    # conn.commit()
     c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'en'}})
     bot.reply_to(message, "Your language has been successfully changed to English")
@@ -559,10 +545,6 @@ def language_en(message):
 @bot.message_handler(commands=['language_de'])
 def language_de(message):
     languages[message.from_user.id] = 'de'
-    # c.execute("UPDATE languages SET language = 'de' WHERE user_id = ?", (message.from_user.id,))
-    # if c.rowcount == 0:
-    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'de'))
-    # conn.commit()
     c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'de'}})
     bot.reply_to(message, "Ihre Sprache wurde erfolgreich auf Deutsch geändert")
@@ -570,10 +552,6 @@ def language_de(message):
 @bot.message_handler(commands=['language_be'])
 def language_be(message):
     languages[message.from_user.id] = 'be'
-    # c.execute("UPDATE languages SET language = 'be' WHERE user_id = ?", (message.from_user.id,))
-    # if c.rowcount == 0:
-    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'be'))
-    # conn.commit()
     c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'be'}})
     bot.reply_to(message, "Ваша мова успішно зменена на беларускую")
@@ -581,10 +559,6 @@ def language_be(message):
 @bot.message_handler(commands=['language_pl'])
 def language_pl(message):
     languages[message.from_user.id] = 'pl'
-    # c.execute("UPDATE languages SET language = 'pl' WHERE user_id = ?", (message.from_user.id,))
-    # if c.rowcount == 0:
-    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'pl'))
-    # conn.commit()
     c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'pl'}})
     bot.reply_to(message, "Twoja język został pomyślnie zmieniony na polski")
@@ -592,10 +566,6 @@ def language_pl(message):
 @bot.message_handler(commands=['language_cs'])
 def language_cs(message):
     languages[message.from_user.id] = 'cs'
-    # c.execute("UPDATE languages SET language = 'cs' WHERE user_id = ?", (message.from_user.id,))
-    # if c.rowcount == 0:
-    #     c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'cs'))
-    # conn.commit()
     c = db["languages"]
     c.update_one({'user_id': message.from_user.id}, {'$set': {'language': 'cs'}})
     bot.reply_to(message, "Váš jazyk byl úspěšně změněn na češtinu")
@@ -605,8 +575,6 @@ def language_cs(message):
 def superunbind(message):
     if message.from_user.id not in languages:
         languages[message.from_user.id] = 'uk'
-        # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-        # conn.commit()
         c = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
     if (message.text[13:], str(message.chat.id)) in programs:
@@ -619,8 +587,6 @@ def superunbind(message):
 def superbindings(message):
     if message.from_user.id not in languages:
         languages[message.from_user.id] = 'uk'
-        # c.execute("INSERT INTO languages VALUES (?, ?)", (message.from_user.id, 'uk'))
-        # conn.commit()
         c = db["languages"]
         c.insert_one({'user_id': message.from_user.id, 'language': 'uk'})
 
@@ -657,7 +623,32 @@ def superbindings(message):
 @bot.message_handler(commands=['execute'])
 def one_time_execute(message):
     try:
-        result = execute_program(message.reply_to_message.text, {}, message = message)
+        # Read dict of user variables from database
+        c = db["user_variables"]
+        user_variables = c.find_one({'user_id': message.from_user.id})
+        if user_variables is None:
+            user_variables = {}
+        else:
+            user_variables = user_variables['variables']
+        
+        # Read dict of global variables (shared between all users) from database
+        c = db["global_variables"]
+        global_variables = c.find_one({'global': True})
+        if global_variables is None:
+            global_variables = {}
+        else:
+            global_variables = global_variables['variables']
+
+        result = execute_program(message.reply_to_message.text, {}, message = message, global_variables=global_variables, user_variables=user_variables)
+
+        # Save dict of user variables to database
+        c = db["user_variables"]
+        c.update_one({'user_id': message.from_user.id}, {'$set': {'variables': user_variables}}, upsert=True)
+
+        # Save dict of global variables (shared between all users) to database
+        c = db["global_variables"]
+        c.update_one({'global': True}, {'$set': {'variables': global_variables}}, upsert=True)
+
         bot.reply_to(message, result, parse_mode='HTML', disable_web_page_preview=True)
     except Exception as e:
         bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())

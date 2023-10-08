@@ -166,7 +166,15 @@ def parse(expression: str) -> List[str]:
 
 from typing import Dict
 from copy import deepcopy
-def execute_program(program_code: str, variables: Dict[str, str], message, functions = None, functions_lambdas = None) -> str:
+def execute_program(
+        program_code: str, 
+        variables: Dict[str, str], 
+        message, 
+        functions = None, 
+        functions_lambdas = None, 
+        global_variables = None,
+        user_variables = None,
+        ) -> str:
     print(f"Execute input: {program_code}, {variables}")
     if 'return' in variables.keys():
         if type(variables['return']) != str:
@@ -214,9 +222,9 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
         first_subprogram = program_code[first_subprogram_start + 1:first_subprogram_end]
 
         execute_second = False
-        if expression_eval(parse(substitute_variables(condition, variables, message)), functions, functions_lambdas):
+        if expression_eval(parse(substitute_variables(condition, variables, message, global_variables, user_variables)), functions, functions_lambdas):
             print("Condition is true, executing first subprogram")
-            execute_program(first_subprogram, variables, message, functions, functions_lambdas)
+            execute_program(first_subprogram, variables, message, functions, functions_lambdas, global_variables, user_variables)
         else:
             print("Condition is false")
             execute_second = True
@@ -236,19 +244,25 @@ def execute_program(program_code: str, variables: Dict[str, str], message, funct
             second_subprogram = program_code[second_subprogram_start + 1:second_subprogram_end]
             if execute_second:
                 print("Executing second subprogram")
-                execute_program(second_subprogram, variables, message, functions, functions_lambdas)
+                execute_program(second_subprogram, variables, message, functions, functions_lambdas, global_variables, user_variables)
             print("Finished executing if")
-            return execute_program(program_code[second_subprogram_end + 1:], variables, message, functions, functions_lambdas)
+            return execute_program(program_code[second_subprogram_end + 1:], variables, message, functions, functions_lambdas, global_variables, user_variables)
         else:
             print("Finished executing if")
-            return execute_program(program_code[ first_subprogram_end + 1:], variables, message, functions, functions_lambdas)
+            return execute_program(program_code[ first_subprogram_end + 1:], variables, message, functions, functions_lambdas, global_variables, user_variables)
             
     # starts with command
     command = program_code[:program_code.index(";")]
-    execute_command(command, variables, message, functions, functions_lambdas)
-    return execute_program(program_code[program_code.index(";") + 1:], variables, message, functions, functions_lambdas)
+    execute_command(command, variables, message, functions, functions_lambdas, global_variables, user_variables)
+    return execute_program(program_code[program_code.index(";") + 1:], variables, message, functions, functions_lambdas, global_variables, user_variables)
 
-def substitute_variables(expression: str, variables: Dict[str, str], message) -> str:
+def substitute_variables(
+        expression: str, 
+        variables: Dict[str, str], 
+        message,
+        global_variables: Dict[str, str],
+        user_variables: Dict[str, str],
+        ) -> str:
     print(f"Substitute input: {expression}, {variables}")
     for variable in variables.keys():
         if(type(variables[variable]) != list and type(variables[variable]) != dict):
@@ -256,6 +270,18 @@ def substitute_variables(expression: str, variables: Dict[str, str], message) ->
                 expression = expression.replace(f"${variable}$", f'{variables[variable]}')
             else:
                 expression = expression.replace(f"${variable}$", str(variables[variable]))
+    for global_variable in global_variables.keys():
+        if(type(global_variables[global_variable]) != list and type(global_variables[global_variable]) != dict):
+            if(type(global_variables[global_variable]) == str):
+                expression = expression.replace(f"$global {global_variable}$", f'{global_variables[global_variable]}')
+            else:
+                expression = expression.replace(f"$global {global_variable}$", str(global_variables[global_variable]))
+    for user_variable in user_variables.keys():
+        if(type(user_variables[user_variable]) != list and type(user_variables[user_variable]) != dict):
+            if(type(user_variables[user_variable]) == str):
+                expression = expression.replace(f"$user {user_variable}$", f'{user_variables[user_variable]}')
+            else:
+                expression = expression.replace(f"$user {user_variable}$", str(user_variables[user_variable]))
     print(f"Substitute variables output: {expression}")
     while "$message." in expression:
         message_substitution_start = expression.index("$message.")
@@ -358,12 +384,30 @@ def process_assignment_expression(expression: str, functions, functions_lambdas)
     else:
         return expression_eval(parse(expression), functions, functions_lambdas)
 
-def execute_command(command: str, variables: Dict[str, str], message, functions, functions_lambdas) -> None:
+def execute_command(
+        command: str, 
+        variables: Dict[str, str], 
+        message, functions, 
+        functions_lambdas,
+        global_variables: Dict[str, str],
+        user_variables: Dict[str, str],
+        ) -> None:
     print(f"Execute command input: {command[:100]}")
-    command = substitute_variables(command, variables, message)
+    command = substitute_variables(command, variables, message, global_variables, user_variables)
     command = command.replace('return', 'return=')
     if '=' in command:
         assignment = process_assignment_expression(command[command.index("=") + 1:], functions, functions_lambdas)
+
+        global_variable = False
+        user_variable = False
+        if command[:command.index("=")].startswith("global"):
+            global_variable = True
+            command = command[6:]
+        elif command[:command.index("=")].startswith("user"):
+            user_variable = True
+            command = command[4:]
+        
+
         if assignment in functions:
             functions.append(command[:command.index("=")])
             functions_lambdas[command[:command.index("=")]] = lambda a: functions_lambdas[assignment](a)
@@ -378,7 +422,12 @@ def execute_command(command: str, variables: Dict[str, str], message, functions,
                 return assignment[a]
             functions_lambdas[command[:command.index("=")]] = f
         else:
-            variables[command[:command.index("=")]] = assignment
+            if global_variable:
+                global_variables[command[:command.index("=")]] = assignment
+            elif user_variable:
+                user_variables[command[:command.index("=")]] = assignment
+            else:
+                variables[command[:command.index("=")]] = assignment
     else:
         return
 

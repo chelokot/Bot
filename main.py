@@ -189,7 +189,7 @@ def execute_program(
         functions_lambdas = deepcopy(default_functions_lambdas)
 
     clear = lambda s: s.replace("\n", ";").replace("\t", "").replace(" ", "").replace("'", '"')
-    clear_with_dollars = '$'.join([clear(line) if i % 2 == 0 else line for i, line in enumerate(program_code.split('$'))])
+    clear_with_dollars = lambda text: '$'.join([clear(line) if i % 2 == 0 else line for i, line in enumerate(text.split('$'))])
     program_code = '"'.join([clear_with_dollars(line) if i % 2 == 0 else line for i, line in enumerate(program_code.split('"'))])
     if program_code[-1] != ";":
         program_code += ";"

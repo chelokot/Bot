@@ -768,5 +768,11 @@ def handle_text_command(message):
         for chunk in text_chunks:
             bot.reply_to(message, chunk)
 
+        if os.path.exists('image.jpg'):
+            os.remove('image.jpg')
+        
+        if len(text_chunks) == 0:
+            bot.reply_to(message, f'No text found in {language} language. Use /text [language] to change language')
+
 
 bot.polling()

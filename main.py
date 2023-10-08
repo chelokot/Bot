@@ -431,21 +431,21 @@ def execute_command(
     else:
         return
 
-program_code = \
-"""
-s = [1, 2, "3"];
+#program_code = \
+#"""
+#s = [1, 2, "3"];
+#
+#a = s(2);
+#b = 3 + s(0 + 1);
+#
+#return "a = $a$, b = $b$";
+#"""
 
-a = s(2);
-b = 3 + s(0 + 1);
+#variables = {
+#    'name': 'Andrey',
+#}
 
-return "a = $a$, b = $b$";
-"""
-
-variables = {
-    'name': 'Andrey',
-}
-
-print(execute_program(program_code, variables, None))
+#print(execute_program(program_code, variables, None))
 
 """
 day = ($message.date$ - 1693774800) | 86400; 

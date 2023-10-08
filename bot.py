@@ -619,7 +619,7 @@ def superbindings(message):
         bindings = f"⛓ {macros_title[languages[message.from_user.id]]}:\n" + bindings
     bot.reply_to(message, bindings, parse_mode='HTML')
 
-def execute_program(program, message):
+def bot_execute_program(program, message):
     try:
         # Read dict of user variables from database
         c = db["user_variables"]
@@ -653,7 +653,7 @@ def execute_program(program, message):
 
 @bot.message_handler(commands=['execute'])
 def one_time_execute(message):
-    execute_program(message.reply_to_message.text, message)
+    bot_execute_program(message.reply_to_message.text, message)
 
 
 @bot.message_handler(func=lambda message: True)
@@ -664,7 +664,7 @@ def echo_message(message):
 
     if message.text == '\\':
         try:
-            execute_program(message.reply_to_message.text, message)
+            bot_execute_program(message.reply_to_message.text, message)
         except:
             pass
 
@@ -673,10 +673,10 @@ def echo_message(message):
             if program[0:2] == '-r':
                 import regex
                 if regex.search(program[3:], message.text):
-                    execute_program(programs[(program, chat_id)], message)
+                    bot_execute_program(programs[(program, chat_id)], message)
             else:
                 if program in message.text:
-                    execute_program(programs[(program, chat_id)], message)
+                    bot_execute_program(programs[(program, chat_id)], message)
 
 from ruiji import img_search
 # Handle image messages

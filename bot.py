@@ -104,7 +104,7 @@ def bind(message):
 @bot.message_handler(commands=['start'])
 def start(message):
     # only answer if command is "/start" or "/start@<bot_username>" and not "/start<something_else>":
-    if message.split('/start@')[-1] not in ['/start', bot.get_me().username, '']:
+    if message.text.split('/start@')[-1] not in ['/start', bot.get_me().username, '']:
         return
     hello_message = {
         'uk': f'Привіт, мене звуть {bot.get_me().first_name}.\nВикористовуйте /help щоб дізнатись більше про мої можливості',
@@ -126,7 +126,7 @@ def start(message):
 @bot.message_handler(commands=['help'])
 def help(message):
     # only answer if command is "/help" or "/help@<bot_username>" and not "/help<something_else>":
-    if message.split('/help@')[-1] not in ['/help', bot.get_me().username, '']:
+    if message.text.split('/help@')[-1] not in ['/help', bot.get_me().username, '']:
         return
     macros_description = {
         'uk': """Використовуйте /superbind щоб створити макрос
@@ -340,7 +340,7 @@ Použijte /superbindings k zobrazení všech maker v chatu
 @bot.message_handler(commands=['examples'])
 def examples(message):
     # only answer if command is "/help" or "/help@<bot_username>" and not "/help<something_else>":
-    if message.split('/examples@')[-1] not in ['/examples', bot.get_me().username, '']:
+    if message.text.split('/examples@')[-1] not in ['/examples', bot.get_me().username, '']:
         return
     examples_text = {
         'uk': """Приклади макросів:
@@ -458,7 +458,7 @@ return $s$;</code>
 @bot.message_handler(commands=['settings'])
 def settings(message):
     # only answer if command is "/settings" or "/settings@<bot_username>" and not "/settings<something_else>":
-    if message.split('/settings@')[-1] not in ['/settings', bot.get_me().username, '']:
+    if message.text.split('/settings@')[-1] not in ['/settings', bot.get_me().username, '']:
         return
     settings_text = {
         'uk': """Налаштування:

@@ -177,7 +177,10 @@ def execute_program(
         functions_lambdas = None, 
         global_variables = None,
         user_variables = None,
-        ) -> str:
+        ) -> Pair[str, bool]:
+    """
+
+    """
     print(f"Execute input: {program_code}, {variables}")
     if 'return' in variables.keys():
         if type(variables['return']) != str:

@@ -41,7 +41,7 @@ def get(url: str, params: dict) -> dict:
     except:
         return {}
 
-default_functions = ['sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'ln', 'get']
+default_functions = ['sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'ln', 'get', 'random']
 default_functions_lambdas = {
     'sin': lambda a: math.sin(a),
     'cos': lambda a: math.cos(a),

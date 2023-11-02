@@ -256,7 +256,7 @@ def execute_program(
         first_subprogram = program_code[first_subprogram_start + 1:first_subprogram_end]
 
         execute_second = False
-        if expression_eval(parse(substitute_variables(condition, variables, message, global_variables, user_variables)), functions, functions_lambdas):
+        if expression_eval(parse(substitute_variables(condition, variables, message, global_variables, user_variables)), functions, functions_lambdas) in ["True", "true", True]:
             print("Condition is true, executing first subprogram")
             execute_program(first_subprogram, variables, message, functions, functions_lambdas, global_variables, user_variables)
         else:

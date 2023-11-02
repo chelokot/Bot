@@ -148,12 +148,12 @@ def parse(expression: str) -> List[str]:
                     tokens.append(current_token)
                     current_token = ""
                 tokens.append(c)
-            elif '"' not in current_token and len(current_token) > 0 and (current_token[-1] == "<" and c == "=" or current_token[-1] == ">" and c == "=" or current_token[-1] == "=" and c == "=" or current_token[-1] == "!" and c == "=" or current_token[-1] == "o" and c == "r"):
+            elif '"' not in current_token and len(current_token) > 0 and (current_token[-1] == "<" and c == "=" or current_token[-1] == ">" and c == "=" or current_token[-1] == "=" and c == "=" or current_token[-1] == "!" and c == "=" or current_token == "o" and c == "r"):
                 if len(current_token) > 1:
                     tokens.append(current_token[:-1])
                 tokens.append(current_token[-1] + c)
                 current_token = ""
-            elif '"' not in current_token and len(current_token) > 1 and (current_token[-2:] == "an" and c == "d"):
+            elif '"' not in current_token and len(current_token) > 1 and (current_token == "an" and c == "d"):
                 if len(current_token) > 2:
                     tokens.append(current_token[:-2])
                 tokens.append(current_token[-2:] + c)

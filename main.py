@@ -206,7 +206,7 @@ def execute_program(
     if program_code == "":
         return ProgramResult(
             output = "",
-            web_preview = variables['return'].replace('"', '')
+            web_preview = variables['#web_preview'] if '#web_preview' in variables.keys() else False
         )
     
     if functions == None:

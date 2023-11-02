@@ -11,7 +11,7 @@ def print(*args, **kwargs):
         except:
             time.sleep(random.random())
 
-from typing import List
+from typing import List, Tuple, Dict, Callable, Union
 
 import math
 ops = [["^"], ["*", "/", "|"], ["%"], ["+", "-"], ["<", ">", "<=", ">=", "==", "!="], ['and'], ['or']]
@@ -167,6 +167,14 @@ def parse(expression: str) -> List[str]:
     print(f"Parse output: {tokens}")
     return tokens
 
+@dataclass
+class ProgramResult:
+    """
+    A class to store the result of a program.
+    """
+    output: str
+    web_preview: str
+
 from typing import Dict
 from copy import deepcopy
 def execute_program(
@@ -177,17 +185,28 @@ def execute_program(
         functions_lambdas = None, 
         global_variables = None,
         user_variables = None,
-        ) -> Pair[str, bool]:
-    """
-
-    """
+        ) -> ProgramResult:
     print(f"Execute input: {program_code}, {variables}")
     if 'return' in variables.keys():
+        if '#web_preview' not in variables.keys():
+            variables['#web_preview'] = False
+        else:
+            if type(variables['#web_preview']) != bool:
+                variables['#web_preview'] = variables['#web_preview'] == 'true' or variables['#web_preview'] == 'True'
         if type(variables['return']) != str:
-            return str(variables['return'])
-        return variables['return'].replace('"', '')
+            return ProgramResult(
+                output = str(variables['return']),
+                web_preview = variables['#web_preview']
+            )
+        return ProgramResult(
+            output = variables['return'].replace('"', ''),
+            web_preview = variables['#web_preview']
+        )
     if program_code == "":
-        return ""
+        return ProgramResult(
+            output = "",
+            web_preview = variables['return'].replace('"', '')
+        )
     
     if functions == None:
         functions = deepcopy(default_functions)

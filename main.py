@@ -52,6 +52,7 @@ default_functions_lambdas = {
     'abs': lambda a: abs(a),
     'ln': lambda a: math.log(a),
     'get': lambda a: get(a, {}),
+    'random': lambda a: random.randint(0, a),
 }
 
 def expression_eval(tokens: List[str], functions, functions_lambdas) -> float:

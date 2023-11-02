@@ -661,7 +661,7 @@ def bot_execute_program(program, message):
         c = db["global_variables"]
         c.update_one({'chat_id': chat_id}, {'$set': {'variables': global_variables}}, upsert=True)
 
-        if result != "":
+        if result.output != "":
             bot.reply_to(message, result.output, parse_mode='HTML', disable_web_page_preview=not result.web_preview)
     except Exception as e:
         bot.reply_to(message, str(e) + "\n\n" + traceback.format_exc())

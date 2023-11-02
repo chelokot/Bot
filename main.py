@@ -161,6 +161,12 @@ def parse(expression: str) -> List[str]:
             elif c == '"' and '"' in current_token:
                 tokens.append(current_token + c)
                 current_token = ""
+            elif current_token == "Tru" and c == "e":
+                tokens.append(current_token + c)
+                current_token = ""
+            elif current_token == "Fals" and c == "e":
+                tokens.append(current_token + c)
+                current_token = ""
             else:
                 current_token += c
     if current_token != "":

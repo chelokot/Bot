@@ -167,6 +167,7 @@ def parse(expression: str) -> List[str]:
     print(f"Parse output: {tokens}")
     return tokens
 
+from dataclasses import dataclass
 @dataclass
 class ProgramResult:
     """
